@@ -1,14 +1,539 @@
+Here is the updated webpage code! I've added a sleek Bot Profile Widget right at the top of the container featuring your glowing "N" logo (4348_2.jpg) with a neon cyan border, accompanied by quick info about the app.
+Save this file as index.html (and make sure to name your logo image file logo.jpg or update the src attribute in the code to match your actual image filename):
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=https://discord.com/oauth2/authorize?client_id=1565374256198459414">
-    <script>
-        window.location.href = "https://discord.com/oauth2/authorize?client_id=1565374256198459414";
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula — Minecraft & Hypixel Verification Bot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030305;
+            --container-bg: rgba(10, 11, 16, 0.85);
+            --card-bg: rgba(18, 20, 29, 0.6);
+            --card-border: rgba(0, 243, 255, 0.15);
+            --card-border-hover: rgba(0, 243, 255, 0.5);
+            
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff007f;
+            --neon-purple: #b800ff;
+            --neon-green: #00ff66;
+            
+            --text-main: #d1d5db;
+            --text-muted: #828a9a;
+            --text-white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            cursor: none !important;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 243, 255, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(184, 0, 255, 0.08) 0%, transparent 45%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 60px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Canvas Particle Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Neon Cursor Elements */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px var(--neon-cyan), 0 0 16px var(--neon-cyan), 0 0 30px rgba(0, 243, 255, 0.8);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .cursor-ring {
+            position: fixed;
+            width: 42px;
+            height: 42px;
+            border: 1.5px solid var(--neon-cyan);
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.25) 0%, rgba(0, 243, 255, 0.05) 60%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 12px rgba(0, 243, 255, 0.3);
+            transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+        }
+
+        body.cursor-hover .cursor-dot {
+            background-color: var(--neon-magenta);
+            box-shadow: 0 0 12px var(--neon-magenta), 0 0 24px var(--neon-magenta);
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        body.cursor-hover .cursor-ring {
+            width: 58px;
+            height: 58px;
+            border-color: var(--neon-magenta);
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.3) 0%, rgba(255, 0, 127, 0.05) 60%, transparent 100%);
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.5);
+        }
+
+        /* Container Card */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 760px;
+            background: var(--container-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 45px 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 2px rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            text-align: center;
+        }
+
+        /* Profile Widget */
+        .profile-widget {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 30px;
+            text-align: left;
+            gap: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s ease;
+        }
+
+        .profile-widget:hover {
+            border-color: var(--card-border-hover);
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .profile-status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 14px;
+            height: 14px;
+            background-color: var(--neon-green);
+            border: 2px solid var(--bg-dark);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-green);
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .profile-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: -0.3px;
+        }
+
+        .profile-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75em;
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-cyan);
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+        }
+
+        .profile-desc {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: rgba(0, 243, 255, 0.08);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--neon-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-cyan);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 243, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 2.4em;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-purple) 50%, var(--neon-magenta) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.25));
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05em;
+            margin: 0 auto 30px auto;
+            max-width: 580px;
+        }
+
+        /* Development Progress Card */
+        .progress-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .progress-title {
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            color: var(--neon-cyan);
+            font-weight: 700;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 85%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            border-radius: 10px;
+            box-shadow: 0 0 12px var(--neon-cyan);
+            transition: width 1s ease-in-out;
+        }
+
+        /* Message from Me Section */
+        .message-card {
+            background: rgba(18, 20, 29, 0.4);
+            border: 1px solid rgba(184, 0, 255, 0.25);
+            border-left: 4px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-bottom: 30px;
+            text-align: left;
+            position: relative;
+        }
+
+        .message-title {
+            font-size: 0.85em;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--neon-purple);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .message-body {
+            color: var(--text-main);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Action Buttons Container */
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-discord {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 32px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1em;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #5865f2, #4752c4);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 25px rgba(88, 101, 242, 0.4);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-discord:hover {
+            background: linear-gradient(135deg, #6975f3, #5865f2);
+            box-shadow: 0 0 35px rgba(88, 101, 242, 0.7);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .profile-widget {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+            .profile-name-row {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .btn-discord {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>If you are not redirected automatically, <a href="https://discord.com/oauth2/authorize?client_id=1565374256198459414">click here</a>.</p>
+
+    <!-- Canvas Particle Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Custom Neon Cursor -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-ring" id="cursor-ring"></div>
+
+    <div class="container">
+        
+        <!-- Profile Widget with App Info & Logo Image -->
+        <div class="profile-widget">
+            <div class="profile-avatar-container">
+                <!-- Replace 'logo.jpg' with your actual image filename -->
+                <img src="logo.jpg" alt="Nebula Logo" class="profile-avatar">
+                <span class="profile-status-dot"></span>
+            </div>
+            <div class="profile-info">
+                <div class="profile-name-row">
+                    <span class="profile-title">Nebula Bot</span>
+                    <span class="profile-tag">v2.0 Active</span>
+                </div>
+                <p class="profile-desc">
+                    Secure Hypixel & Minecraft Discord verification with automated live nickname syncing, custom BedWars prestige stars, and rank formatting.
+                </p>
+            </div>
+        </div>
+
+        <!-- Status Indicator -->
+        <div class="status-badge">
+            <span class="pulse-dot"></span> Systems Fully Operational
+        </div>
+
+        <h1>NEBULA</h1>
+        <p class="subtitle">The ultimate Minecraft & Hypixel verification bot for Discord communities.</p>
+
+        <!-- Progress Indicator -->
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">Core Deployment</span>
+                <span class="progress-percent">100%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Personal Message -->
+        <div class="message-card">
+            <div class="message-title">💬 Developer Note</div>
+            <p class="message-body">
+                Nebula seamlessly authenticates users via the Hypixel API, pulling customized stats, prestige symbols, and bracket configurations to keep your server member list clean and accurate in real-time. Click below to add Nebula to your server!
+            </p>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="actions">
+            <a href="https://discord.com/oauth2/authorize?client_id=1565374256198459414" target="_blank" class="btn-discord">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Add Nebula to Discord
+            </a>
+        </div>
+    </div>
+
+    <!-- Particle Background Script -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let pts = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            pts = Array.from({ length: 50 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4
+            }));
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < pts.length; i++) {
+                let p = pts[i];
+                p.x += p.vx; 
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                for (let j = i + 1; j < pts.length; j++) {
+                    let p2 = pts[j];
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 140) {
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - dist / 140)})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+    </script>
+
+    <!-- Smooth Neon Cursor Script -->
+    <script>
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+
+        let mouseX = -100, mouseY = -100;
+        let ringX = -100, ringY = -100;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            dot.style.left = `${mouseX}px`;
+            dot.style.top = `${mouseY}px`;
+        });
+
+        function renderCursor() {
+            ringX += (mouseX - ringX) * 0.18;
+            ringY += (mouseY - ringY) * 0.18;
+
+            ring.style.left = `${ringX}px`;
+            ring.style.top = `${ringY}px`;
+
+            requestAnimationFrame(renderCursor);
+        }
+        renderCursor();
+
+        const hoverTargets = document.querySelectorAll('a, button, .progress-card, .message-card, .profile-widget');
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            target.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+    </script>
 </body>
 </html>
+
